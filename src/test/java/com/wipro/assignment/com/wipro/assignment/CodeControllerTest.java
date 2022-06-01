@@ -81,15 +81,15 @@ public class CodeControllerTest {
 				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
 		assertEquals(expectedResult, actualResult);
 	}
-
+	
 	@Test
 	public void testUpdateTitleController() throws Exception {
 		List<LineItemDto> lineItemDOList = DemoApplicationTests.getSampleInput("TestJson_1.json");
 		Map<String, Object> expectedResult = new HashMap<String, Object>();
-		expectedResult.put("Unique User Id Count", 10);
-		Mockito.when(service.updateTitle(lineItemDOList, "4", "1800Flowers")).thenReturn(expectedResult);
-		Map<String, Object> actualResult = codeController.updateTitle(lineItemDOList, "4", "1800Flowers");
-		mockMvc.perform(MockMvcRequestBuilders.put("http://localhost:8080/updateTitle/4/1800Flowers")
+		expectedResult.put("resultData", DemoApplicationTests.getSampleInput("TestJson_1_UpdateResult.json"));
+		Mockito.when(service.updateTitle(lineItemDOList, "10", "Something")).thenReturn(expectedResult);
+		Map<String, Object> actualResult = codeController.updateTitle(lineItemDOList, "10", "Something");
+		mockMvc.perform(MockMvcRequestBuilders.put("http://localhost:8080/updateTitle/10/Something")
 				.contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(lineItemDOList))
 				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 		assertEquals(expectedResult, actualResult);
@@ -100,13 +100,13 @@ public class CodeControllerTest {
 		List<LineItemDto> lineItemDOList = DemoApplicationTests.getSampleInput("TestJson_2.json");
 		Map<String, Object> expectedResult = new HashMap<String, Object>();
 		expectedResult.put("errorMessage", "Input Param is Empty");
-		Mockito.when(service.updateTitle(lineItemDOList, "4", "1800Flowers")).thenReturn(expectedResult);
-		Map<String, Object> actualResult = codeController.updateTitle(lineItemDOList, "4", "1800Flowers");
-		mockMvc.perform(MockMvcRequestBuilders.put("http://localhost:8080/updateTitle/4/1800Flowers")
+		Mockito.when(service.updateTitle(lineItemDOList, "99", "My Text")).thenReturn(expectedResult);
+		Map<String, Object> actualResult = codeController.updateTitle(lineItemDOList, "99", "My Text");
+		mockMvc.perform(MockMvcRequestBuilders.put("http://localhost:8080/updateTitle/99/My Text")
 				.contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(lineItemDOList))
 				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 		assertEquals(expectedResult, actualResult);
-	}
+	}	
 
 	@Test
 	public void testUpdateTitleControllerNullUserId() throws Exception {
@@ -114,9 +114,49 @@ public class CodeControllerTest {
 		Map<String, Object> expectedResult = new HashMap<String, Object>();
 		expectedResult.put("exceptionMessage",
 				"java.lang.NullPointerException: element cannot be mapped to a null key");
+		Mockito.when(service.updateTitle(lineItemDOList, "50", "SampleText")).thenReturn(expectedResult);
+		Map<String, Object> actualResult = codeController.updateTitle(lineItemDOList, "50", "SampleText");
+		mockMvc.perform(MockMvcRequestBuilders.put("http://localhost:8080/updateTitle/50/SampleText")
+				.contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(lineItemDOList))
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+		assertEquals(expectedResult, actualResult);
+	}
+
+	@Test
+	public void testUpdateFourthElementController() throws Exception {
+		List<LineItemDto> lineItemDOList = DemoApplicationTests.getSampleInput("TestJson_1.json");
+		Map<String, Object> expectedResult = new HashMap<String, Object>();
+		expectedResult.put("resultData", DemoApplicationTests.getSampleInput("TestJson_1_UpdateResult.json"));
 		Mockito.when(service.updateTitle(lineItemDOList, "4", "1800Flowers")).thenReturn(expectedResult);
-		Map<String, Object> actualResult = codeController.updateTitle(lineItemDOList, "4", "1800Flowers");
-		mockMvc.perform(MockMvcRequestBuilders.put("http://localhost:8080/updateTitle/4/1800Flowers")
+		Map<String, Object> actualResult = codeController.updateFourthElement(lineItemDOList);
+		mockMvc.perform(MockMvcRequestBuilders.put("http://localhost:8080/updateFourthElement")
+				.contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(lineItemDOList))
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+		assertEquals(expectedResult, actualResult);
+	}
+
+	@Test
+	public void testUpdateFourthElementControllerEmptyArray() throws Exception {
+		List<LineItemDto> lineItemDOList = DemoApplicationTests.getSampleInput("TestJson_2.json");
+		Map<String, Object> expectedResult = new HashMap<String, Object>();
+		expectedResult.put("errorMessage", "Input Param is Empty");
+		Mockito.when(service.updateTitle(lineItemDOList, "4", "1800Flowers")).thenReturn(expectedResult);
+		Map<String, Object> actualResult = codeController.updateFourthElement(lineItemDOList);
+		mockMvc.perform(MockMvcRequestBuilders.put("http://localhost:8080/updateFourthElement")
+				.contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(lineItemDOList))
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+		assertEquals(expectedResult, actualResult);
+	}
+
+	@Test
+	public void testUpdateFourthElementControllerNullUserId() throws Exception {
+		List<LineItemDto> lineItemDOList = DemoApplicationTests.getSampleInput("TestJson_3.json");
+		Map<String, Object> expectedResult = new HashMap<String, Object>();
+		expectedResult.put("exceptionMessage",
+				"java.lang.NullPointerException: element cannot be mapped to a null key");
+		Mockito.when(service.updateTitle(lineItemDOList, "4", "1800Flowers")).thenReturn(expectedResult);
+		Map<String, Object> actualResult = codeController.updateFourthElement(lineItemDOList);
+		mockMvc.perform(MockMvcRequestBuilders.put("http://localhost:8080/updateFourthElement")
 				.contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(lineItemDOList))
 				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 		assertEquals(expectedResult, actualResult);
