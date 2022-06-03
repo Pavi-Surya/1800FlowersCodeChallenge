@@ -1,10 +1,8 @@
 package com.wipro.assignment.com.wipro.assignment;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.assertj.core.api.Assertions;
@@ -14,13 +12,10 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wipro.codingtest.dtos.LineItemDto;
 import com.wipro.codingtest.endpoint.CodeController;
 import com.wipro.codingtest.service.CodeService;
 
@@ -44,121 +39,109 @@ public class CodeControllerTest {
 
 	@Test
 	public void testGetUniqueIdCountController() throws Exception {
-		List<LineItemDto> lineItemDOList = DemoApplicationTests.getSampleInput("TestJson_1.json");
 		Map<String, Object> expectedResult = new HashMap<String, Object>();
 		expectedResult.put("Unique User Id Count", 10);
-		Mockito.when(service.getUniqueIdCountForJson(lineItemDOList)).thenReturn(expectedResult);
-		Map<String, Object> actualResult = codeController.getUniqueIdCountForJson(lineItemDOList);
-		mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:8080/getUniqueIdCount")
-				.contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(lineItemDOList))
-				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
+		Mockito.when(service.getUniqueIdCountForJson("TestJson_1.json")).thenReturn(expectedResult);
+		Map<String, Object> actualResult = codeController.getUniqueIdCountForJson("TestJson_1.json");
+		mockMvc.perform(
+				MockMvcRequestBuilders.post("http://localhost:8080/getUniqueIdCount").param("url", "TestJson_1.json"))
+				.andReturn().getResponse().getStatus();
 		assertEquals(expectedResult, actualResult);
 	}
 
 	@Test
 	public void testGetUniqueIdCountControllerEmptyArray() throws Exception {
-		List<LineItemDto> lineItemDOList = DemoApplicationTests.getSampleInput("TestJson_2.json");
 		Map<String, Object> expectedResult = new HashMap<String, Object>();
 		expectedResult.put("errorMessage", "Input List is Empty");
-		Mockito.when(service.getUniqueIdCountForJson(lineItemDOList)).thenReturn(expectedResult);
-		Map<String, Object> actualResult = codeController.getUniqueIdCountForJson(lineItemDOList);
-		mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:8080/getUniqueIdCount")
-				.contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(lineItemDOList))
-				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
+		Mockito.when(service.getUniqueIdCountForJson("TestJson_2.json")).thenReturn(expectedResult);
+		Map<String, Object> actualResult = codeController.getUniqueIdCountForJson("TestJson_2.json");
+		mockMvc.perform(
+				MockMvcRequestBuilders.post("http://localhost:8080/getUniqueIdCount").param("url", "TestJson_2.json"))
+				.andReturn().getResponse().getStatus();
 		assertEquals(expectedResult, actualResult);
 	}
 
 	@Test
 	public void testGetUniqueIdCountControllerNullUserId() throws Exception {
-		List<LineItemDto> lineItemDOList = DemoApplicationTests.getSampleInput("TestJson_3.json");
 		Map<String, Object> expectedResult = new HashMap<String, Object>();
 		expectedResult.put("exceptionMessage",
 				"java.lang.NullPointerException: element cannot be mapped to a null key");
-		Mockito.when(service.getUniqueIdCountForJson(lineItemDOList)).thenReturn(expectedResult);
-		Map<String, Object> actualResult = codeController.getUniqueIdCountForJson(lineItemDOList);
-		mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:8080/getUniqueIdCount")
-				.contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(lineItemDOList))
-				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
+		Mockito.when(service.getUniqueIdCountForJson("TestJson_3.json")).thenReturn(expectedResult);
+		Map<String, Object> actualResult = codeController.getUniqueIdCountForJson("TestJson_3.json");
+		mockMvc.perform(
+				MockMvcRequestBuilders.post("http://localhost:8080/getUniqueIdCount").param("url", "TestJson_3.json"))
+				.andReturn().getResponse().getStatus();
 		assertEquals(expectedResult, actualResult);
 	}
-	
+
 	@Test
 	public void testUpdateTitleController() throws Exception {
-		List<LineItemDto> lineItemDOList = DemoApplicationTests.getSampleInput("TestJson_1.json");
 		Map<String, Object> expectedResult = new HashMap<String, Object>();
 		expectedResult.put("resultData", DemoApplicationTests.getSampleInput("TestJson_1_UpdateResult.json"));
-		Mockito.when(service.updateTitle(lineItemDOList, "10", "Something")).thenReturn(expectedResult);
-		Map<String, Object> actualResult = codeController.updateTitle(lineItemDOList, "10", "Something");
-		mockMvc.perform(MockMvcRequestBuilders.put("http://localhost:8080/updateTitle/10/Something")
-				.contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(lineItemDOList))
-				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+		Mockito.when(service.updateTitle("TestJson_1.json", "10", "Something")).thenReturn(expectedResult);
+		Map<String, Object> actualResult = codeController.updateTitle("TestJson_1.json", "10", "Something");
+		mockMvc.perform(MockMvcRequestBuilders.put("http://localhost:8080/updateTitle/10/Something").param("url",
+				"TestJson_1.json")).andReturn().getResponse().getStatus();
 		assertEquals(expectedResult, actualResult);
 	}
 
 	@Test
 	public void testUpdateTitleControllerEmptyArray() throws Exception {
-		List<LineItemDto> lineItemDOList = DemoApplicationTests.getSampleInput("TestJson_2.json");
 		Map<String, Object> expectedResult = new HashMap<String, Object>();
 		expectedResult.put("errorMessage", "Input Param is Empty");
-		Mockito.when(service.updateTitle(lineItemDOList, "99", "My Text")).thenReturn(expectedResult);
-		Map<String, Object> actualResult = codeController.updateTitle(lineItemDOList, "99", "My Text");
-		mockMvc.perform(MockMvcRequestBuilders.put("http://localhost:8080/updateTitle/99/My Text")
-				.contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(lineItemDOList))
-				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+		Mockito.when(service.updateTitle("TestJson_2.json", "99", "My_Text")).thenReturn(expectedResult);
+		Map<String, Object> actualResult = codeController.updateTitle("TestJson_2.json", "99", "My_Text");
+		mockMvc.perform(MockMvcRequestBuilders.put("http://localhost:8080/updateTitle/99/My_Text").param("url",
+				"TestJson_2.json")).andReturn().getResponse().getStatus();
 		assertEquals(expectedResult, actualResult);
-	}	
+	}
 
 	@Test
 	public void testUpdateTitleControllerNullUserId() throws Exception {
-		List<LineItemDto> lineItemDOList = DemoApplicationTests.getSampleInput("TestJson_3.json");
 		Map<String, Object> expectedResult = new HashMap<String, Object>();
 		expectedResult.put("exceptionMessage",
 				"java.lang.NullPointerException: element cannot be mapped to a null key");
-		Mockito.when(service.updateTitle(lineItemDOList, "50", "SampleText")).thenReturn(expectedResult);
-		Map<String, Object> actualResult = codeController.updateTitle(lineItemDOList, "50", "SampleText");
-		mockMvc.perform(MockMvcRequestBuilders.put("http://localhost:8080/updateTitle/50/SampleText")
-				.contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(lineItemDOList))
-				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+		Mockito.when(service.updateTitle("TestJson_3.json", "50", "SampleText")).thenReturn(expectedResult);
+		Map<String, Object> actualResult = codeController.updateTitle("TestJson_3.json", "50", "SampleText");
+		mockMvc.perform(MockMvcRequestBuilders.put("http://localhost:8080/updateTitle/50/SampleText").param("url",
+				"TestJson_3.json")).andReturn().getResponse().getStatus();
 		assertEquals(expectedResult, actualResult);
 	}
 
 	@Test
 	public void testUpdateFourthElementController() throws Exception {
-		List<LineItemDto> lineItemDOList = DemoApplicationTests.getSampleInput("TestJson_1.json");
 		Map<String, Object> expectedResult = new HashMap<String, Object>();
 		expectedResult.put("resultData", DemoApplicationTests.getSampleInput("TestJson_1_UpdateResult.json"));
-		Mockito.when(service.updateTitle(lineItemDOList, "4", "1800Flowers")).thenReturn(expectedResult);
-		Map<String, Object> actualResult = codeController.updateFourthElement(lineItemDOList);
-		mockMvc.perform(MockMvcRequestBuilders.put("http://localhost:8080/updateFourthElement")
-				.contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(lineItemDOList))
-				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+		Mockito.when(service.updateTitle("TestJson_1.json", "4", "1800Flowers")).thenReturn(expectedResult);
+		Map<String, Object> actualResult = codeController.updateFourthElement("TestJson_1.json");
+		mockMvc.perform(
+				MockMvcRequestBuilders.put("http://localhost:8080/updateFourthElement").param("url", "TestJson_1.json"))
+				.andReturn().getResponse().getStatus();
 		assertEquals(expectedResult, actualResult);
 	}
 
 	@Test
 	public void testUpdateFourthElementControllerEmptyArray() throws Exception {
-		List<LineItemDto> lineItemDOList = DemoApplicationTests.getSampleInput("TestJson_2.json");
 		Map<String, Object> expectedResult = new HashMap<String, Object>();
 		expectedResult.put("errorMessage", "Input Param is Empty");
-		Mockito.when(service.updateTitle(lineItemDOList, "4", "1800Flowers")).thenReturn(expectedResult);
-		Map<String, Object> actualResult = codeController.updateFourthElement(lineItemDOList);
-		mockMvc.perform(MockMvcRequestBuilders.put("http://localhost:8080/updateFourthElement")
-				.contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(lineItemDOList))
-				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+		Mockito.when(service.updateTitle("TestJson_2.json", "4", "1800Flowers")).thenReturn(expectedResult);
+		Map<String, Object> actualResult = codeController.updateFourthElement("TestJson_2.json");
+		mockMvc.perform(
+				MockMvcRequestBuilders.put("http://localhost:8080/updateFourthElement").param("url", "TestJson_2.json"))
+				.andReturn().getResponse().getStatus();
 		assertEquals(expectedResult, actualResult);
 	}
 
 	@Test
 	public void testUpdateFourthElementControllerNullUserId() throws Exception {
-		List<LineItemDto> lineItemDOList = DemoApplicationTests.getSampleInput("TestJson_3.json");
 		Map<String, Object> expectedResult = new HashMap<String, Object>();
 		expectedResult.put("exceptionMessage",
 				"java.lang.NullPointerException: element cannot be mapped to a null key");
-		Mockito.when(service.updateTitle(lineItemDOList, "4", "1800Flowers")).thenReturn(expectedResult);
-		Map<String, Object> actualResult = codeController.updateFourthElement(lineItemDOList);
-		mockMvc.perform(MockMvcRequestBuilders.put("http://localhost:8080/updateFourthElement")
-				.contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(lineItemDOList))
-				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+		Mockito.when(service.updateTitle("TestJson_3.json", "4", "1800Flowers")).thenReturn(expectedResult);
+		Map<String, Object> actualResult = codeController.updateFourthElement("TestJson_3.json");
+		mockMvc.perform(
+				MockMvcRequestBuilders.put("http://localhost:8080/updateFourthElement").param("url", "TestJson_3.json"))
+				.andReturn().getResponse().getStatus();
 		assertEquals(expectedResult, actualResult);
 	}
 

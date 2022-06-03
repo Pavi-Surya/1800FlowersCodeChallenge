@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
@@ -33,6 +34,33 @@ public class CodeController {
 	@Autowired
 	private CodeService service;
 
+	@PostMapping("/getUniqueIdCount")
+	public Map<String, Object> getUniqueIdCountForJson(@RequestParam String url) {
+		try {
+			LOG.info("Inside CodeController -> getUniqueIdCountForJson Method...");
+			return service.getUniqueIdCountForJson(url);
+		} catch (Exception e) {
+			LOG.info("Exception occurred at CodeController -> getUniqueIdCountForJson Method : " + e.toString());
+			Map<String, Object> result = new HashMap<>();
+			result.put("exceptionMessage", e.toString());
+			return result;
+		}
+	}
+
+	@PutMapping("/updateTitle/{id}/{newTitle}")
+	public Map<String, Object> updateTitle(@RequestParam String url, @PathVariable String id,
+			@PathVariable String newTitle) {
+		try {
+			LOG.info("Inside CodeController -> updateTitle Method...");
+			return service.updateTitle(url, id, newTitle);
+		} catch (Exception e) {
+			LOG.info("Exception occurred at CodeController -> updateTitle Method : " + e.toString());
+			Map<String, Object> result = new HashMap<>();
+			result.put("exceptionMessage", e.toString());
+			return result;
+		}
+	}
+
 	@EventListener
 	public void handleContextRefresh(ContextRefreshedEvent event) {
 		ApplicationContext applicationContext = event.getApplicationContext();
@@ -44,42 +72,15 @@ public class CodeController {
 	}
 	
 	@GetMapping("/getNumberofEndpoints")
-	public String index() {
+	public String getNumberofEndpoints() {
 		return "Number of EndPoints... " + counter;
-	}
-
-	@PostMapping("/getUniqueIdCount")
-	public Map<String, Object> getUniqueIdCountForJson(@RequestBody List<LineItemDto> lineItemDOList) {
-		try {
-			LOG.info("Inside CodeController -> getUniqueIdCountForJson Method...");
-			return service.getUniqueIdCountForJson(lineItemDOList);
-		} catch (Exception e) {
-			LOG.info("Exception occurred at CodeController -> getUniqueIdCountForJson Method : " + e.toString());
-			Map<String, Object> result = new HashMap<>();
-			result.put("exceptionMessage", e.toString());
-			return result;
-		}
-	}
-
-	@PutMapping("/updateTitle/{id}/{newTitle}")
-	public Map<String, Object> updateTitle(@RequestBody List<LineItemDto> lineItemDOList, @PathVariable String id,
-			@PathVariable String newTitle) {
-		try {
-			LOG.info("Inside CodeController -> updateTitle Method...");
-			return service.updateTitle(lineItemDOList, id, newTitle);
-		} catch (Exception e) {
-			LOG.info("Exception occurred at CodeController -> updateTitle Method : " + e.toString());
-			Map<String, Object> result = new HashMap<>();
-			result.put("exceptionMessage", e.toString());
-			return result;
-		}
 	}
 	
 	@PutMapping("/updateFourthElement")
-	public Map<String, Object> updateFourthElement(@RequestBody List<LineItemDto> lineItemDOList) {
+	public Map<String, Object> updateFourthElement(@RequestParam String url) {
 		try {
 			LOG.info("Inside CodeController -> updateFourthElement Method...");
-			return service.updateTitle(lineItemDOList, "4", "1800Flowers");
+			return service.updateTitle(url, "4", "1800Flowers");
 		} catch (Exception e) {
 			LOG.info("Exception occurred at CodeController -> updateFourthElement Method : " + e.toString());
 			Map<String, Object> result = new HashMap<>();
